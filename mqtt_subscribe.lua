@@ -1,6 +1,7 @@
 dofile("gpio_config.lua")
+dofile("mqtt_credentials.lua")
 
-m = mqtt.Client("clientid", 120, "", "")
+m = mqtt.Client("clientid", 120, mqtt_cred.user, mqtt_cred.passwd)
 
 m:on("connect", 
 	function(client) 
@@ -12,7 +13,10 @@ m:on("connect",
 		end) 
 	end)
 
-m:on("offline", function(client) print ("offline") end)
+m:on("offline", 
+	function(client) 
+		print ("offline") 
+	end)
 
 m:on("message", 
 	function(conn, topic, data) 
@@ -28,4 +32,4 @@ m:on("message",
   		end
 	end)
 
-m:connect("iot.eclipse.org", 1883, 0, 1)
+m:connect(mqtt_cred.host, mqtt_cred.port, 0, 1)
